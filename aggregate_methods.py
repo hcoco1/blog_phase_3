@@ -27,26 +27,24 @@ def count_cities_in_state():
 
 
 @click.command(help="Calculate the average population of cities in a given state.")
-@click.argument('state_name')
-def average_city_population_in_state(state_name):
+def average_city_population_in_state():
+    state_name = click.prompt(click.style('Please enter the name of the state', fg='blue'), type=str)
     average = session.query(func.avg(City.population)).join(State).filter(State.name == state_name).scalar()
-    click.echo(f"The average population of cities in {state_name} is: {average:.2f}")
-    
+    click.echo(click.style(f"The average population of cities in {state_name} is: {average:.2f}", fg='green'))
 
 @click.command(help="Find the total area of all cities in a given county.")
-@click.argument('county_name')
-def total_area_in_county(county_name):
+def total_area_in_county():
+    county_name = click.prompt(click.style('Please enter the name of the county', fg='blue'), type=str)
     area = session.query(func.sum(City.area)).join(County).filter(County.name == county_name).scalar()
-    click.echo(f"The total area of cities in {county_name} county is: {area:.2f}")  
-
+    click.echo(click.style(f"The total area of cities in {county_name} county is: {area:.2f}", fg='green'))
 
 @click.command(help="Count the number of facilities in a given city.")
-@click.argument('city_name')
-def count_facilities_in_city(city_name):
+def count_facilities_in_city():
+    city_name = click.prompt(click.style('Please enter the name of the city', fg='blue'), type=str)
     count = session.query(func.count(Facilities.id)).join(association_table).join(City).filter(City.name == city_name).scalar()
-    click.echo(f"The number of facilities in {city_name} is: {count}")
+    click.echo(click.style(f"The number of facilities in {city_name} is: {count}", fg='green'))
 
-cli.add_command(count_facilities_in_city)
+
 
 session.close()
 
@@ -59,8 +57,8 @@ if __name__ == '__main__':
     cli()
    
     
-# python aggregate_methods.py count-cities-in-state "state_name"   
-# python aggregate_methods.py count-cities-in-state "Connecticut"
+# python aggregate_methods.py count-cities-in-state   
+# python aggregate_methods.py count-cities-in-state 
 # ==> The number of cities in Connecticut is: 4
 
 """
@@ -71,8 +69,8 @@ WHERE s.name = "Connecticut";
 """
 
 
-# python aggregate_methods.py average-city-population-in-state "state_name"   
-# python aggregate_methods.py average-city-population-in-state "Connecticut"
+# python aggregate_methods.py average-city-population-in-state  
+# python aggregate_methods.py average-city-population-in-state 
 # ==> The average population of cities in Connecticut is: 17192.75
 
 """
@@ -84,8 +82,8 @@ WHERE s.name = "Connecticut";
 """
 
 
-# python aggregate_methods.py total-area-in-county "county_name"   
-# python aggregate_methods.py total-area-in-county "Susanside"
+# python aggregate_methods.py total-area-in-county 
+# python aggregate_methods.py total-area-in-county 
 # ==> The total area of cities in Susanside county is: 1537.00
 
 """
@@ -97,8 +95,8 @@ WHERE co.name = "Susanside";
 """
 
 
-# python aggregate_methods.py count-facilities-in-city "city_name"   
-# python aggregate_methods.py count-facilities-in-city "Lake Hunter"
+# python aggregate_methods.py count-facilities-in-city  
+# python aggregate_methods.py count-facilities-in-city 
 # ==> The number of facilities in Lake Hunter is: 8
 
 """
